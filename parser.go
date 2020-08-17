@@ -1,7 +1,6 @@
 package main
 
 import (
-    "fmt"
     "errors"
     "text/scanner"
     "strings"
@@ -65,7 +64,6 @@ func (f Formatter) Apply(file id3.File) {
 }
 
 func (fm *Formatter) Extract(content, format string) error {
-    fmt.Printf("Extracting from %s with %s\n", content, format)
     // loop through each char in format
     // and match it with content
     //
