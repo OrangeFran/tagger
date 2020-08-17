@@ -32,3 +32,16 @@ func TestParseBeginning(t *testing.T) {
     }
 }
 
+func TestParseError(t *testing.T) {
+    // create a simple formatter
+    format := "music_%a - %t & (%y)"
+    content := "music_artist - title (18/10/2020)"
+
+    fm := Formatter {}
+    err := fm.Extract(content, format)
+
+    // evaluate the results
+    if err == nil {
+        t.Errorf("Test should have failed! It instead worked!")
+    }
+}

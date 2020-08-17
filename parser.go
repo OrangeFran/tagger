@@ -104,6 +104,10 @@ func (fm *Formatter) Extract(content, format string) error {
                     field = field + string(c)
                     continue
                 }
+                // if scanner.EOF was found
+                if c == scanner.EOF {
+                    return errors.New("Invalid format specified!")
+                }
                 field = field + string(c)
                 if strings.Contains(field, split) {
                     // remove the string that was specified in the format
@@ -134,6 +138,7 @@ func (fm *Formatter) Extract(content, format string) error {
         if c != f {
             return errors.New("⁉️  Invalid format specifier")
         }
+
     }
 
     return nil
