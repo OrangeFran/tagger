@@ -15,7 +15,7 @@ import (
 
 // analyzes the name of a ".mp3" file
 // and extracts information specified in the format string
-func add(file os.FileInfo, format, directory string) error {
+func add(file os.FileInfo, format, directory string, dry_run bool) error {
     //  - remove extension
     //  - split at " - "
     name := strings.ReplaceAll(file.Name(), ".mp3", "")
@@ -25,24 +25,24 @@ func add(file os.FileInfo, format, directory string) error {
     if err != nil {
         return err
     }
-    // var artist, title string
-    // if len(pieces) == 1 {
-    //     artist = "Unknown Artist"
-    //     title = pieces[0]
-    // } else {
-    //     artist = pieces[0]
-    //     title = pieces[1]
-    // }
 
     // status message
-    // fmt.Printf("🎵 Tagging %s\n\t-> %s (artist)\n\t-> %s (title)\n", file.Name(), artist, title)
+    fmt.Printf("🎵 Tagging %s\n\n", file.Name())
+    for key, val := range fm.Status() {
+        fmt.Printf("\t%s: %s", key, val)
+    }
 
     // acutally tag the file
-    id3File, err := id3.Open(path.Join(directory, file.Name()))
-    if err != nil {
-        return errors.New(fmt.Sprintf("⁉️  Failed to open %s", file.Name()))
+    // only if dry-run is false
+    if !dry_run {
+        id3File, err := id3.Open(path.Join(directory, file.Name()))
+        if err != nil {
+            return errors.New(fmt.Sprintf("⁉️  Failed to open %s", file.Name()))
+        }
+
+        fm.Apply(*id3File)
+        id3File.Close()
     }
-    defer id3File.Close()
 
     return nil
 }
@@ -52,11 +52,16 @@ func main() {
     var directory string
     // how to extract/use information in the name
     var format string
+    // only show what the code would do
+    var dry_run bool
 
     // some flag values
+    flag.BoolVar(&dry_run, "dry-run", false, "only show what would happen")
     flag.StringVar(&directory, "d", "./", "specify the directory")
     flag.StringVar(&format, "f", "%a - %t", "specify the format of the file names")
     flag.Parse()
+
+    if dry_run { fmt.Println("🏃 Running in dry-run mode") }
 
     // get all files from the directory
     files, err := ioutil.ReadDir(directory)
@@ -69,11 +74,11 @@ func main() {
     for _, file := range files {
         // check if it's an .mp3 file
         if !strings.Contains(file.Name(), ".mp3") {
-            fmt.Printf("➡️  Skipping  %s\n", file.Name())
+            fmt.Printf("🚫 Skipping  %s\n", file.Name())
             continue
         }
         // extrace information
-        err := add(file, format, directory)
+        err := add(file, format, directory, dry_run)
         if err != nil {
             log.Fatal(err)
         }

@@ -8,6 +8,11 @@ import (
     id3 "github.com/mikkyang/id3-go"
 )
 
+// if a value is empty, do not set it
+func empty(a string) bool {
+    if len(a) == 0 { return true } else { return false }
+}
+
 // hold data which gets added
 // to the .mp3 file
 type Formatter struct {
@@ -18,11 +23,29 @@ type Formatter struct {
     Genre string
 }
 
-func (f Formatter) Apply(file id3.File) {
-    // if a value is empty, do not set it
-    empty := func(a string) bool {
-        if len(a) == 0 { return true } else { return false }
+func (f Formatter) Status() map[string]string {
+    info := make(map[string]string)
+
+    if !empty(f.Artist) {
+        info["artist"] = f.Artist
     }
+    if !empty(f.Title) {
+        info["title"] = f.Title
+    }
+    if !empty(f.Album) {
+        info["album"] = f.Album
+    }
+    if !empty(f.Year) {
+        info["year"] = f.Year
+    }
+    if !empty(f.Genre) {
+        info["genre"] = f.Genre
+    }
+
+    return info
+}
+
+func (f Formatter) Apply(file id3.File) {
 
     if !empty(f.Artist) {
         file.SetArtist(f.Artist)
@@ -106,7 +129,7 @@ func (fm *Formatter) Extract(content, format string) error {
                 }
                 // if scanner.EOF was found
                 if c == scanner.EOF {
-                    return errors.New("Invalid format specified!")
+                    return errors.New("⁉️  Invalid format specifier")
                 }
                 field = field + string(c)
                 if strings.Contains(field, split) {
@@ -129,8 +152,6 @@ func (fm *Formatter) Extract(content, format string) error {
             case 'g':
                 fm.Genre = field
             }
-
-            fmt.Printf("New value for %s: %s\n", string(specifier), field)
 
             continue
         }
