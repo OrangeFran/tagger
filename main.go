@@ -47,7 +47,7 @@ func main() {
                     },
                 },
                 Action: func(c *cli.Context) error {
-                    return tag()
+                    return get()
                 },
             },
             {
@@ -68,7 +68,7 @@ func main() {
                     },
                     &cli.StringFlag {
                         Name: "target",
-                        Aliases: []string{"d"},
+                        Aliases: []string{"t"},
                         Usage: "tag this `TARGET`",
                         Destination: &target,
                         Required: true,
@@ -109,19 +109,22 @@ func get() error {
         // open the file as an mp3 one
         id3File, err := id3.Open(path.Join(target))
         if err != nil {
-            return errors.New(fmt.Sprintf("\n⁉️  Failed to open %s",  target))
+            return errors.New(fmt.Sprintf("Aborting ...\n⁉️  Failed to open %s", fi.Name()))
         }
         // extrace information
         fm := Formatter {}
         err = fm.Query(id3File)
         if err != nil {
-            log.Fatal(err)
+            return err
         }
+        id3File.Close()
         // print out lots of information
-        fmt.Printf("\n🎵 Querying %s\n\n", target)
+        fmt.Printf("\n🎵 Querying %s\n\n", fi.Name())
         for key, val := range fm.Status() {
             fmt.Printf("\t%s: %s\n", key, val)
         }
+
+        return nil
     }
 
     // if we're here, we know that target is a directory
@@ -138,9 +141,9 @@ func get() error {
             continue
         }
         // open the file as an mp3 one
-        id3File, err := id3.Open(path.Join(file.Name()))
+        id3File, err := id3.Open(path.Join(target, file.Name()))
         if err != nil {
-            return errors.New(fmt.Sprintf("\n⁉️  Failed to open %s",  file.Name()))
+            return errors.New(fmt.Sprintf("Aborting ...\n⁉️  Failed to open %s",  file.Name()))
         }
         // extrace information
         fm := Formatter {}
@@ -148,6 +151,7 @@ func get() error {
         if err != nil {
             return err
         }
+        id3File.Close()
         // print out lots of information
         fmt.Printf("\n🎵 Querying %s\n\n", target)
         for key, val := range fm.Status() {
@@ -174,7 +178,7 @@ func tag() error {
             fmt.Printf("\nSkipping  %s", target)
         }
         // extrace information
-        return add(target)
+        return add(fi.Name(), true)
     }
 
     // if we're here, we know that target is a directory
@@ -191,7 +195,7 @@ func tag() error {
             continue
         }
         // extrace information
-        err := add(file.Name())
+        err := add(file.Name(), false)
         if err != nil {
             return err
         }
@@ -202,7 +206,7 @@ func tag() error {
 
 // analyzes the name of a ".mp3" file
 // and extracts information specified in the format string
-func add(file string) error {
+func add(file string, isFile bool) error {
     //  - remove extension
     //  - split at " - "
     name := strings.ReplaceAll(file, ".mp3", "")
@@ -216,9 +220,17 @@ func add(file string) error {
     // acutally tag the file
     // only if dry-run is false
     if !dry_run {
-        id3File, err := id3.Open(path.Join(file))
+        var err error
+        var id3File *id3.File
+        // actually open the file as an mp3 one
+        if isFile {
+            id3File, err = id3.Open(path.Join(target))
+        } else {
+            id3File, err = id3.Open(path.Join(target, file))
+        }
+
         if err != nil {
-            return errors.New(fmt.Sprintf("\n⁉️  Failed to open %s", file))
+            return errors.New(fmt.Sprintf("Aborting ...\n⁉️  Failed to open %s", file))
         }
 
         fm.Apply(*id3File)
