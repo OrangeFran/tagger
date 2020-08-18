@@ -45,7 +45,6 @@ func (f Formatter) Status() map[string]string {
 }
 
 func (f Formatter) Apply(file id3.File) {
-
     if !empty(f.Artist) {
         file.SetArtist(f.Artist)
     }
@@ -63,7 +62,48 @@ func (f Formatter) Apply(file id3.File) {
     }
 }
 
-func (fm *Formatter) Extract(content, format string) error {
+// simply query the information
+// and add it to the struct
+func (fm *Formatter) Query(file *id3.File) error {
+    artist := file.Artist()
+    title := file.Title()
+    album := file.Album()
+    year := file.Year()
+    genre := file.Genre()
+
+    if !empty(artist) {
+        fm.Artist = artist
+    }
+    if !empty(title) {
+        fm.Title = title
+    }
+    if !empty(album) {
+        fm.Album = album
+    }
+    if !empty(year) {
+        fm.Year = year
+    }
+    if !empty(genre) {
+        fm.Genre = genre
+    }
+
+    return nil
+}
+
+// extracts information out of content (typically the title of file)
+// based on the format variable, which is using the following specifiers/identifiers
+//
+// %a   -> the artist
+// %t   -> the title
+// %l   -> the name of the album
+// %y   -> the year
+// %g   -> the genre
+//
+// one simple format I often use is: %a - %t
+// this means I save my files like this:
+//      "Justin Bieber - Baby.mp3"
+// this is just an example, definetely not my taste
+func (fm *Formatter) Extract(content string) error {
     // loop through each char in format
     // and match it with content
     //
