@@ -40,7 +40,7 @@ func main() {
                     },
                 },
                 Action: func(c *cli.Context) error {
-                    return get()
+                    return Get()
                 },
             },
             {
@@ -75,7 +75,7 @@ func main() {
                     },
                 },
                 Action: func(c *cli.Context) error {
-                    return tag()
+                    return Tag()
                 },
             },
         },
@@ -88,7 +88,7 @@ func main() {
 }
 
 // used to query tags
-func get() error {
+func Get() error {
     // check if target is a file
     fi, err := os.Stat(target)
     if err != nil {
@@ -157,7 +157,7 @@ func get() error {
 
 // used to tag files
 // based on target and format
-func tag() error {
+func Tag() error {
     if dry_run { fmt.Println("\n🏃 Running in dry-run mode") }
 
     // check if target is a file
@@ -171,7 +171,7 @@ func tag() error {
             fmt.Printf("\n   Skipping  %s", target)
         }
         // extrace information
-        return add(fi.Name(), true)
+        return Add(fi.Name(), true)
     }
 
     // if we're here, we know that target is a directory
@@ -188,7 +188,7 @@ func tag() error {
             continue
         }
         // extrace information
-        err := add(file.Name(), false)
+        err := Add(file.Name(), false)
         if err != nil {
             return err
         }
@@ -199,7 +199,7 @@ func tag() error {
 
 // analyzes the name of a ".mp3" file
 // and extracts information specified in the format string
-func add(file string, isFile bool) error {
+func Add(file string, isFile bool) error {
     //  - remove extension
     //  - split at " - "
     name := strings.ReplaceAll(file, ".mp3", "")
