@@ -97,12 +97,12 @@ func Get() error {
     // if it's a file, extract information and return
     if mode := fi.Mode(); mode.IsRegular() {
         if !strings.Contains(target, ".mp3") {
-            fmt.Printf("\n   Skipping  %s", target)
+            fmt.Printf("\n[*] Skipping  %s", target)
         }
         // open the file as an mp3 one
         id3File, err := id3.Open(path.Join(target))
         if err != nil {
-            return errors.New(fmt.Sprintf("Aborting ...\n⁉️  Failed to open %s", fi.Name()))
+            return errors.New(fmt.Sprintf("[-] Aborting ...\n[-] Failed to open %s", fi.Name()))
         }
         // extrace information
         fm := Formatter {}
@@ -112,7 +112,7 @@ func Get() error {
         }
         id3File.Close()
         // print out lots of information
-        fmt.Printf("\n🎵 Querying %s\n\n", fi.Name())
+        fmt.Printf("\n[+] Querying %s\n\n", fi.Name())
         for key, val := range fm.Status() {
             fmt.Printf("\t%s: %s\n", key, val)
         }
@@ -130,13 +130,13 @@ func Get() error {
     for _, file := range files {
         // check if it's an .mp3 file
         if !strings.Contains(file.Name(), ".mp3") {
-            fmt.Printf("\n   Skipping  %s\n", file.Name())
+            fmt.Printf("\n[*] Skipping  %s\n", file.Name())
             continue
         }
         // open the file as an mp3 one
         id3File, err := id3.Open(path.Join(target, file.Name()))
         if err != nil {
-            return errors.New(fmt.Sprintf("Aborting ...\n⁉️  Failed to open %s",  file.Name()))
+            return errors.New(fmt.Sprintf("[-] Aborting ...\n[-] Failed to open %s", file.Name()))
         }
         // extrace information
         fm := Formatter {}
@@ -146,7 +146,7 @@ func Get() error {
         }
         id3File.Close()
         // print out lots of information
-        fmt.Printf("\n🎵 Querying %s\n\n", file.Name())
+        fmt.Printf("\n[+] Querying %s\n\n", file.Name())
         for key, val := range fm.Status() {
             fmt.Printf("\t%s: %s\n", key, val)
         }
@@ -158,7 +158,7 @@ func Get() error {
 // used to tag files
 // based on target and format
 func Tag() error {
-    if dry_run { fmt.Println("\n🏃 Running in dry-run mode") }
+    if dry_run { fmt.Println("\n[*] Running in dry-run mode") }
 
     // check if target is a file
     fi, err := os.Stat(target)
@@ -168,7 +168,7 @@ func Tag() error {
     // if it's a file, extract information and return
     if mode := fi.Mode(); mode.IsRegular() {
         if !strings.Contains(target, ".mp3") {
-            fmt.Printf("\n   Skipping  %s", target)
+            fmt.Printf("\n[*] Skipping  %s", target)
         }
         // extrace information
         return Add(fi.Name(), true)
@@ -184,7 +184,7 @@ func Tag() error {
     for _, file := range files {
         // check if it's an .mp3 file
         if !strings.Contains(file.Name(), ".mp3") {
-            fmt.Printf("\n   Skipping  %s\n", file.Name())
+            fmt.Printf("\n[*] Skipping  %s\n", file.Name())
             continue
         }
         // extrace information
@@ -212,12 +212,12 @@ func Add(file string, isFile bool) error {
 
     if verbose {
         // print out lots of information
-        fmt.Printf("\n🎵 Tagging %s\n\n", file)
+        fmt.Printf("\n[+] Tagging %s\n\n", file)
         for key, val := range fm.Status() {
             fmt.Printf("\t%s: %s\n", key, val)
         }
     } else {
-        fmt.Printf("\n🎵 Tagging %s", file)
+        fmt.Printf("\n[+] Tagging %s", file)
     }
 
     // acutally tag the file
@@ -233,7 +233,7 @@ func Add(file string, isFile bool) error {
         }
 
         if err != nil {
-            return errors.New(fmt.Sprintf("Aborting ...\n⁉️  Failed to open %s", file))
+            return errors.New(fmt.Sprintf("[-] Aborting ...\n[-] Failed to open %s", file))
         }
 
         fm.Apply(*id3File)
