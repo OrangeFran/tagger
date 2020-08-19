@@ -196,7 +196,7 @@ func Tag(target, format string, verbose, dry_run bool) error {
 }
 
 // sets values manually
-func Manually(target string, verbose bool, fm parser.Formatter) error {
+func Static(target string, verbose bool, fm parser.Formatter) error {
     function := func(file string) error {
         // the actual name without the path
         name := path.Base(file)

@@ -77,9 +77,9 @@ func main() {
                 },
             },
             {
-                Name: "manually",
-                Aliases: []string{"m"},
-                Usage: "Tag with manual values",
+                Name: "static",
+                Aliases: []string{"s"},
+                Usage: "Tag with static values",
                 Flags: []cli.Flag {
                     &cli.BoolFlag {
                         Name: "verbose",
@@ -124,7 +124,7 @@ func main() {
                         c.String("genre"),
                     }
 
-                    return commands.Manually(target, verbose, fm)
+                    return commands.Static(target, verbose, fm)
                 },
             },
             {
