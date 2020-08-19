@@ -12,15 +12,8 @@ import (
 )
 
 var (
-    // variables for "set" command
     dry_run bool                // only show what the code would do
     format string = ""          // how to extract/use information in the name
-    artist, title, album, genre, year string
-
-    // variables used by "clear"
-    clr_artist, clr_atitle, clr_aalbum, clr_agenre, clr_ayear bool
-
-    // varibles use by more than one command
     verbose bool                // specify how much the code should spit out
     target string = ""          // use that file/directory
 )
@@ -85,7 +78,7 @@ func main() {
             },
             {
                 Name: "manually",
-                Aliases: []string{m},
+                Aliases: []string{"m"},
                 Usage: "Tag with manual values",
                 Flags: []cli.Flag {
                     &cli.BoolFlag {
@@ -104,31 +97,34 @@ func main() {
                     &cli.StringFlag {
                         Name: "artist",
                         Usage: "Specifies artist manually",
-                        Destination: &artist,
                     },
                     &cli.StringFlag {
                         Name: "title",
                         Usage: "Specifies title manually",
-                        Destination: &title,
                     },
                     &cli.StringFlag {
                         Name: "album",
                         Usage: "Specifies album manually",
-                        Destination: &album,
                     },
                     &cli.StringFlag {
                         Name: "year",
                         Usage: "Specifies year manually",
-                        Destination: &year,
                     },
                     &cli.StringFlag {
                         Name: "genre",
                         Usage: "Specifies genre manually",
-                        Destination: &genre,
                     },
                 },
                 Action: func(c *cli.Context) error {
-                    return commands.Manually(target, verbose, artist, title, album, year, genre)
+                    fm := parser.Formatter {
+                        c.String("artist"),
+                        c.String("title"),
+                        c.String("album"),
+                        c.String("year"),
+                        c.String("genre"),
+                    }
+
+                    return commands.Manually(target, verbose, fm)
                 },
             },
             {
@@ -152,31 +148,34 @@ func main() {
                     &cli.BoolFlag {
                         Name: "artist",
                         Usage: "Removes the artist tag",
-                        Destination: &artist,
                     },
                     &cli.BoolFlag {
                         Name: "title",
                         Usage: "Removes the title tag",
-                        Destination: &title,
                     },
                     &cli.BoolFlag {
                         Name: "album",
                         Usage: "Removes the album tag",
-                        Destination: &album,
                     },
                     &cli.BoolFlag {
                         Name: "year",
                         Usage: "Removes the year tag",
-                        Destination: &year,
                     },
                     &cli.BoolFlag {
                         Name: "genre",
                         Usage: "Removes the genre tag",
-                        Destination: &genre,
                     },
                 },
                 Action: func(c *cli.Context) error {
-                    return commands.Remove(target, verbose, artist, title, album, year, genre)
+                    return commands.Remove(
+                        target,
+                        verbose,
+                        c.Bool("artist"),
+                        c.Bool("title"),
+                        c.Bool("album"),
+                        c.Bool("year"),
+                        c.Bool("genre"),
+                    )
                 },
             },
         },
