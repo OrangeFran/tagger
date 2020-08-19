@@ -96,23 +96,23 @@ func main() {
                     },
                     &cli.StringFlag {
                         Name: "artist",
-                        Usage: "Specifies artist manually",
+                        Usage: "Set artist to `ARTIST`",
                     },
                     &cli.StringFlag {
                         Name: "title",
-                        Usage: "Specifies title manually",
+                        Usage: "Set title to `TITLE`",
                     },
                     &cli.StringFlag {
                         Name: "album",
-                        Usage: "Specifies album manually",
+                        Usage: "Set album to `ALBUM`",
                     },
                     &cli.StringFlag {
                         Name: "year",
-                        Usage: "Specifies year manually",
+                        Usage: "Set year to `YEAR`",
                     },
                     &cli.StringFlag {
                         Name: "genre",
-                        Usage: "Specifies genre manually",
+                        Usage: "Set genre to `GENRE`",
                     },
                 },
                 Action: func(c *cli.Context) error {

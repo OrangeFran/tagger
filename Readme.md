@@ -74,16 +74,21 @@ Specify the target with `-t` and the fields to remove.
 Possible flags for the fields are:
 
 ```
-
 --artist
 --title
 --album
 --year
 --genre
-
 ```
 
 To get more outpu you can use the `-v` flag.
+
+__Manually add tags__
+
+If the `tag` command isn't right for you, I got you covered.
+With `manually` you can add tags manually.
+Just specifiy the target with `-t` and the tags you want to set with `--artist ARTIST` etc.
+Again, for more verbose output use `-v`.
 
 ### Dependencies
 
