@@ -31,7 +31,7 @@ Alternatively you can read about possible flags and commands here.
 __Query tags__
 
 To query tags, use the subcommand `query` and pass in a target with `-t`.
-If the target is a directoriy, all files of the directory get queried.
+If the target is a directory, all files of the directory get queried.
 
 This will spit out each value that was set.
 
@@ -39,31 +39,29 @@ Look at the `help` command for more.
 
 __Add tags__
 
-Use the subcommand `tag` for that.
+Use the subcommand `tag` to tag files on a specific pattern found in the filename.
+To add static tags use the `manually` command.
 
 Specify your target with `-t`. It can be a file or a directory.
 But keep in mind that for now it does not search recursively.
 
-Now from where does `tagger` get the information to tag files. From the file name!
-For that, you have to pass in a formatting string with `-f`.
+Pass in a formatting string with `-f`.
 
 There are five options avaible:
 
 ```
-
 %a      -> artist
 %t      -> title
 %l      -> album
 %y      -> year
 %g      -> genre
-
 ```
 
 For example, one format I often use is `%a - %t`.
 
 If you first want to look what the binary does without
 doing something to your files, you can use the `--dry-run` flag.
-This won't tag your files. It will only output what would be tagged. 
+This won't tag your files. It will only output what would be done. 
 If your pair this with the `-v` flag, you will get even more information to work with.
 
 __Remove tags__
@@ -81,13 +79,13 @@ Possible flags for the fields are:
 --genre
 ```
 
-To get more outpu you can use the `-v` flag.
+To get more output you can use the `-v` flag.
 
 __Manually add tags__
 
 If the `tag` command isn't right for you, I got you covered.
-With `manually` you can add tags manually.
-Just specifiy the target with `-t` and the tags you want to set with `--artist ARTIST` etc.
+With `manually` you can add static tags.
+Just specifiy the target with `-t` and the tags you want to set with `--artist ARTIST / --title TITLE` etc.
 Again, for more verbose output use `-v`.
 
 ### Dependencies
