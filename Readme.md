@@ -21,12 +21,7 @@ go get "github.com/orangefran/tagger/cmd/tagger"
 
 The binary can be found in the `bin/` folder in your `GOPATH`.
 
-Or you can clone the repository and build the executable manually.
-
-``` bash
-git clone "https://github.com/OrangeFran/tagger.git"
-cd tagger && go run cmd/tagger/main.go
-```
+Alternatively you can clone the repo and build the project manually.
 
 ### Usage
 
@@ -73,10 +68,10 @@ If your pair this with the `-v` flag, you will get even more information to work
 
 __Remove tags__
 
-With `rm` you can remove tags from a file.
+With `remove` you can remove tags from a file.
 Specify the target with `-t` and the fields to remove.
 
-Possible flags for that are:
+Possible flags for the fields are:
 
 ```
 
