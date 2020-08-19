@@ -32,19 +32,14 @@ __Query tags__
 
 To query tags, use the subcommand `query` and pass in a target with `-t`.
 If the target is a directory, all files of the directory get queried.
-
 This will spit out each value that was set.
-
-Look at the `help` command for more.
 
 __Add tags__
 
 Use the subcommand `tag` to tag files on a specific pattern found in the filename.
 To add static tags use the `manually` command.
-
 Specify your target with `-t`. It can be a file or a directory.
 But keep in mind that for now it does not search recursively.
-
 Pass in a formatting string with `-f`.
 
 There are five options avaible:
