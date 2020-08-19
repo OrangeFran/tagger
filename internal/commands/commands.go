@@ -99,7 +99,7 @@ func Clear(target string, verbose, artist, title, album, year, genre bool) error
 }
 
 // used to query tags
-func Get(target string) error {
+func Query(target string) error {
     function := func(file string) error {
         if !strings.Contains(file, ".mp3") {
             fmt.Printf("\n[*] Skipping %s", file)
@@ -112,19 +112,24 @@ func Get(target string) error {
         if err != nil {
             return errors.New(fmt.Sprintf("[-] Aborting ...\n[-] Failed to open %s", name))
         }
+        defer id3File.Close()
         // extrace information
         fm := parser.Formatter {}
         err = fm.Query(id3File)
         if err != nil {
             return err
         }
-        id3File.Close()
         // print out lots of information
+        status := fm.Status()
+        if len(status) == 0 {
+            fmt.Printf("\n[+] Querying %s\n", name)
+            return nil
+        }
+
         fmt.Printf("\n[+] Querying %s\n\n", name)
         for key, val := range fm.Status() {
             fmt.Printf("\t%s: %s\n", key, val)
         }
-
         return nil
     }
 
