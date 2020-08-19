@@ -51,7 +51,7 @@ func Execute(target string, function func(string)error) error {
 }
 
 // remove tags from files
-func Clear(target string, verbose, artist, title, album, year, genre bool) error {
+func Remove(target string, verbose, artist, title, album, year, genre bool) error {
     function := func(file string) error {
         // the actual name without the path
         name := path.Base(file)
