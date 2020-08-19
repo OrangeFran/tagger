@@ -1,9 +1,10 @@
-package main
+package parser
 
 import (
     "errors"
     "text/scanner"
     "strings"
+
     id3 "github.com/mikkyang/id3-go"
 )
 
@@ -103,7 +104,7 @@ func (fm *Formatter) Query(file *id3.File) error {
 // this means I save my files like this:
 //      "Justin Bieber - Baby.mp3"
 // this is just an example, definetely not my taste
-func (fm *Formatter) Extract(content string) error {
+func (fm *Formatter) Extract(content, format string) error {
     // loop through each char in format
     // and match it with content
     //

@@ -14,7 +14,7 @@ You can tag whole directories, single files and query tags.
 Install it with `go get`:
 
 ```
-go get "github.com/orangefran/tagger"
+go get "github.com/orangefran/tagger/cmd/tagger"
 ```
 
 The binary can be found in the `bin/` folder in your `GOPATH`.
@@ -23,7 +23,7 @@ Just clone the repository and build the executable.
 
 ``` bash
 git clone "https://github.com/OrangeFran/tagger.git"
-cd tagger && go build
+cd tagger && go run cmd/tagger/main.go
 ```
 
 ### Usage

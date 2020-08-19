@@ -1,4 +1,4 @@
-package main
+package parser
 
 import (
     "fmt"
@@ -27,11 +27,11 @@ func EvaluateResults(results map[string]string) error {
 
 func TestParseSimple(t *testing.T) {
     // create a simple formatter
-    format = "%a - %t"
+    format := "%a - %t"
     content := "artist - title"
 
     fm := Formatter {}
-    fm.Extract(content)
+    fm.Extract(content, format)
 
     // evaluate the results
     results := map[string]string{
@@ -49,11 +49,11 @@ func TestParseSimple(t *testing.T) {
 
 func TestParseBeginning(t *testing.T) {
     // create a simple formatter
-    format = "music_%a - %t (%y)"
+    format := "music_%a - %t (%y)"
     content := "music_artist - title (18/10/2020)"
 
     fm := Formatter {}
-    fm.Extract(content)
+    fm.Extract(content, format)
 
     // evaluate the results
     results := map[string]string{
@@ -69,11 +69,11 @@ func TestParseBeginning(t *testing.T) {
 
 func TestParseError(t *testing.T) {
     // create a simple formatter
-    format = "music_%a - %t & (%y)"
+    format := "music_%a - %t & (%y)"
     content := "music_artist - title (18/10/2020)"
 
     fm := Formatter {}
-    err := fm.Extract(content)
+    err := fm.Extract(content, format)
 
     // evaluate the results
     if err == nil {
@@ -83,11 +83,11 @@ func TestParseError(t *testing.T) {
 
 func TestParseErrorCutOff(t *testing.T) {
     // create a simple formatter
-    format = "music_%a - %"
+    format := "music_%a - %"
     content := "music_artist - title (18/10/2020)"
 
     fm := Formatter {}
-    err := fm.Extract(content)
+    err := fm.Extract(content, format)
 
     // evaluate the results
     if err == nil {
