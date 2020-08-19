@@ -1,5 +1,7 @@
 # Tagger
 
+![A small preview](preview/preview.gif)
+
 Tagger allows you to tag your mp3 files from the cmdline.
 You can tag whole directories, single files and query tags.
 
