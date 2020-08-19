@@ -109,20 +109,15 @@ func (fm *Formatter) Extract(content string) error {
     //
     // if a % is found, look for the following string
     // and put he read information into the field it belongs to
-    var c rune
-    var cont scanner.Scanner
+    var c, f rune
+    var form, cont scanner.Scanner
     cont.Init(strings.NewReader(content))
-
-    var f rune
-    var form scanner.Scanner
     form.Init(strings.NewReader(format))
 
     split := ""
-    noscan := false
-    until_end := false
+    noscan, until_end := false, false
+    var field, specifier string
 
-    var field string
-    var specifier rune
     for {
         c = cont.Next()
         if noscan {
@@ -136,7 +131,11 @@ func (fm *Formatter) Extract(content string) error {
         }
 
         if f == '%' {
-            specifier = form.Next()
+            f = form.Next()
+            if f == scanner.EOF {
+                return errors.New("[-] Invalid format")
+            }
+            specifier = string(f)
             // flush the split and field vars
             split = ""
             field = ""
@@ -167,7 +166,7 @@ func (fm *Formatter) Extract(content string) error {
                 }
                 // if scanner.EOF was found
                 if c == scanner.EOF {
-                    return errors.New("⁉️  Invalid format specifier")
+                    return errors.New("[-] Invalid format")
                 }
                 field = field + string(c)
                 if strings.Contains(field, split) {
@@ -179,15 +178,15 @@ func (fm *Formatter) Extract(content string) error {
             // finally add the string to the formatter
             // and go on to the next one
             switch specifier {
-            case 'a':
+            case "a":
                 fm.Artist = field
-            case 't':
+            case "t":
                 fm.Title = field
-            case 'l':
+            case "l":
                 fm.Album = field
-            case 'y':
+            case "y":
                 fm.Year = field
-            case 'g':
+            case "g":
                 fm.Genre = field
             }
 
@@ -195,7 +194,7 @@ func (fm *Formatter) Extract(content string) error {
         }
 
         if c != f {
-            return errors.New("⁉️  Invalid format specifier")
+            return errors.New("[-] Invalid format")
         }
 
     }
