@@ -69,5 +69,5 @@ If your pair this with the `-v` flag, you will get even more information to work
 
 Heavy use of the standard library.
 
-* [cli]("https://github.com/urfave/cli")
-* [id3-go]("https://github.com/mikkyang/id3-go")
+* [cli](https://github.com/urfave/cli)
+* [id3-go](https://github.com/mikkyang/id3-go)
