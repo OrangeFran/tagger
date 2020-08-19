@@ -21,7 +21,7 @@ go get "github.com/orangefran/tagger/cmd/tagger"
 
 The binary can be found in the `bin/` folder in your `GOPATH`.
 
-Just clone the repository and build the executable.
+Or you can clone the repository and build the executable manually.
 
 ``` bash
 git clone "https://github.com/OrangeFran/tagger.git"
@@ -30,16 +30,21 @@ cd tagger && go run cmd/tagger/main.go
 
 ### Usage
 
-<u>Query tags</u>
+Use the `help` subcommand to find out more about the command.
+Alternatively you can read about possible flags and commands here.
 
-To query tags, use the subcommand `get` and pass in a target with `-t`.
+__Query tags__
+
+To query tags, use the subcommand `query` and pass in a target with `-t`.
 If the target is a directoriy, all files of the directory get queried.
 
 This will spit out each value that was set.
 
 Look at the `help` command for more.
 
-<u>Tag files</u>
+__Add tags__
+
+Use the subcommand `tag` for that.
 
 Specify your target with `-t`. It can be a file or a directory.
 But keep in mind that for now it does not search recursively.
@@ -61,11 +66,29 @@ There are five options avaible:
 
 For example, one format I often use is `%a - %t`.
 
-If you first want to look what the binary actually does without
+If you first want to look what the binary does without
 doing something to your files, you can use the `--dry-run` flag.
 This won't tag your files. It will only output what would be tagged. 
 If your pair this with the `-v` flag, you will get even more information to work with.
 
+__Remove tags__
+
+With `rm` you can remove tags from a file.
+Specify the target with `-t` and the fields to remove.
+
+Possible flags for that are:
+
+```
+
+--artist
+--title
+--album
+--year
+--genre
+
+```
+
+To get more outpu you can use the `-v` flag.
 
 ### Dependencies
 
