@@ -179,15 +179,51 @@ func Tag(target, format string, verbose, dry_run bool) error {
         // acutally tag the file
         // only if dry-run is false
         if !dry_run {
-            // actually open the file as an mp3 one
+            // open the file as an mp3 one
             id3File, err := id3.Open(file)
             if err != nil {
                 return errors.New(fmt.Sprintf("[-] Aborting ...\n[-] Failed to open '%s'", name))
             }
+            defer id3File.Close()
 
             fm.Apply(*id3File)
-            id3File.Close()
         }
+
+        return nil
+    }
+
+    return Execute(target, function)
+}
+
+// sets values manually
+func Manually(target string, verbose bool, fm parser.Formatter) error {
+    function := func(file string) error {
+        // the actual name without the path
+        name := path.Base(file)
+        if !strings.Contains(name, ".mp3") {
+            fmt.Printf("[*] Skipping '%s'\n", name)
+            return nil
+        }
+
+        if verbose {
+            // print out lots of information
+            fmt.Printf("[+] Tagging '%s'\n", name)
+            for key, val := range fm.Status() {
+                fmt.Printf("    |- %s: '%s'\n", key, val)
+            }
+            fmt.Println()
+        } else {
+            fmt.Printf("[+] Tagging '%s'\n", name)
+        }
+
+        // open the file as an mp3 one
+        id3File, err := id3.Open(file)
+        if err != nil {
+            return errors.New(fmt.Sprintf("[-] Aborting ...\n[-] Failed to open '%s'", name))
+        }
+        defer id3File.Close()
+
+        fm.Apply(*id3File)
 
         return nil
     }
