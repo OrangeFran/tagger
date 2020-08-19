@@ -71,14 +71,14 @@ func Remove(target string, verbose, artist, title, album, year, genre bool) erro
 
         // set the tag to an empty
         // string if it should be removed
-        fmt.Printf("[+] Clearing '%s'\n", name)
+        fmt.Printf("[+] Removing from '%s'\n", name)
         if artist {
             id3File.SetArtist("")
             if verbose { fmt.Println("    |- removed artist") }
         }
         if title {
             id3File.SetTitle("")
-            if verbose { fmt.Println("    |- tremoved title") }
+            if verbose { fmt.Println("    |- removed title") }
         }
         if album {
             id3File.SetAlbum("")
