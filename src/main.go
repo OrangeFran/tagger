@@ -146,7 +146,7 @@ func get() error {
         }
         id3File.Close()
         // print out lots of information
-        fmt.Printf("\n🎵 Querying %s\n\n", target)
+        fmt.Printf("\n🎵 Querying %s\n\n", file.Name())
         for key, val := range fm.Status() {
             fmt.Printf("\t%s: %s\n", key, val)
         }
