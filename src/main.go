@@ -10,7 +10,7 @@ import (
     "io/ioutil"
 
     id3 "github.com/mikkyang/id3-go"
-    cli "github.com/urfave/cli"
+    cli "github.com/urfave/cli/v2"
 )
 
 var (
