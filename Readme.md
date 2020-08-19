@@ -34,7 +34,7 @@ To query tags, use the subcommand `query` and pass in a target with `-t`.
 If the target is a directory, all files of the directory get queried.
 This will spit out each value that was set.
 
-__Add tags__
+__Add dynamic tags__
 
 Use the subcommand `tag` to tag files on a specific pattern found in the filename.
 To add static tags use the `manually` command.
@@ -76,10 +76,10 @@ Possible flags for the fields are:
 
 To get more output you can use the `-v` flag.
 
-__Manually add tags__
+__Add static tags__
 
 If the `tag` command isn't right for you, I got you covered.
-With `manually` you can add static tags.
+With `static` you can add static tags.
 Just specifiy the target with `-t` and the tags you want to set with `--artist ARTIST / --title TITLE` etc.
 Again, for more verbose output use `-v`.
 
