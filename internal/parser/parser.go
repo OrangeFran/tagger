@@ -45,6 +45,44 @@ func (f Formatter) Status() map[string]string {
     return info
 }
 
+func (fm Formatter) Output(format string) (string, error) {
+    output := ""
+    // create a scanner to loop through each character
+    var f rune
+    var form scanner.Scanner
+    form.Init(strings.NewReader(format))
+
+    for {
+        switch f = form.Next(); f {
+        case '\\':
+            f = form.Next()
+        case '%':
+            // add the specified
+            // information to the output string
+            switch form.Next() {
+            case 'a':
+                output = output + fm.Artist
+            case 't':
+                output = output + fm.Title
+            case 'l':
+                output = output + fm.Album
+            case 'y':
+                output = output + fm.Year
+            case 'g':
+                output = output + fm.Genre
+            default:
+                return "", errors.New("[-] Invalid format")
+            }
+            continue
+        case scanner.EOF:
+            return output, nil
+        }
+        // if nothing matched, just add the char
+        // to the output string
+        output = output + string(f)
+    }
+}
+
 func (f Formatter) Apply(file id3.File) {
     if !empty(f.Artist) {
         file.SetArtist(f.Artist)

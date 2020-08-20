@@ -58,41 +58,34 @@ func Remove(target string, verbose, artist, title, album, year, genre bool) erro
 
         // check if it's an .mp3 file
         if !strings.Contains(name, ".mp3") {
-            fmt.Printf("[*] Skipping '%s'\n", name)
             return nil
         }
 
         // open the file as an mp3 one
         id3File, err := id3.Open(file)
         if err != nil {
-            return errors.New(fmt.Sprintf("[-] Aborting ...\n[-] Failed to open '%s'", name))
+            return errors.New(fmt.Sprintf("Failed to open '%s'", name))
         }
         defer id3File.Close()
 
         // set the tag to an empty
         // string if it should be removed
-        fmt.Printf("[+] Removing from '%s'\n", name)
+        if verbose { fmt.Printf("Removing from '%s'\n", name) }
         if artist {
             id3File.SetArtist("")
-            if verbose { fmt.Println("    |- removed artist") }
         }
         if title {
             id3File.SetTitle("")
-            if verbose { fmt.Println("    |- removed title") }
         }
         if album {
             id3File.SetAlbum("")
-            if verbose { fmt.Println("    |- removed album") }
         }
         if year {
             id3File.SetYear("")
-            if verbose { fmt.Println("    |- removed year") }
         }
         if genre {
             id3File.SetGenre("")
-            if verbose { fmt.Println("    |- removed genre") }
         }
-        fmt.Println()
 
         return nil
     }
@@ -101,20 +94,19 @@ func Remove(target string, verbose, artist, title, album, year, genre bool) erro
 }
 
 // used to query tags
-func Query(target string) error {
+func Query(target, format string, verbose bool) error {
     function := func(file string) error {
         // the actual name without the path
         name := path.Base(file)
 
         if !strings.Contains(name, ".mp3") {
-            fmt.Printf("[*] Skipping '%s'\n", name)
             return nil
         }
 
         // open the file as an mp3 one
         id3File, err := id3.Open(file)
         if err != nil {
-            return errors.New(fmt.Sprintf("[-] Aborting ...\n[-] Failed to open '%s'", name))
+            return errors.New(fmt.Sprintf("Failed to open '%s'", name))
         }
         defer id3File.Close()
         // extrace information
@@ -124,17 +116,19 @@ func Query(target string) error {
             return err
         }
         // print out lots of information
-        status := fm.Status()
-        if len(status) == 0 {
-            fmt.Printf("[+] Nothing set for '%s'\n", name)
-            return nil
+        output, err := fm.Output(format)
+        if err != nil {
+            return err
         }
 
-        fmt.Printf("[+] Querying '%s'\n", name)
-        for key, val := range fm.Status() {
-            fmt.Printf("    |- %s: '%s'\n", key, val)
-        }
-        fmt.Println()
+        fmt.Println(output)
+        // if verbose {
+        //     fmt.Printf("[+] Querying '%s'\n", name)
+        //     for key, val := range fm.Status() {
+        //         fmt.Printf("    |- %s: '%s'\n", key, val)
+        //     }
+        //     fmt.Println()
+        // }
 
         return nil
     }
@@ -145,14 +139,11 @@ func Query(target string) error {
 // used to tag files
 // based on target and format
 func Tag(target, format string, verbose, dry_run bool) error {
-    if dry_run { fmt.Println("[*] Running in dry-run mode\n") }
-
     function := func(file string) error {
         // the actual name without the path
         name := path.Base(file)
 
         if !strings.Contains(name, ".mp3") {
-            fmt.Printf("[*] Skipping '%s'\n", name)
             return nil
         }
 
@@ -166,14 +157,7 @@ func Tag(target, format string, verbose, dry_run bool) error {
         }
 
         if verbose {
-            // print out lots of information
-            fmt.Printf("[+] Tagging '%s'\n", name)
-            for key, val := range fm.Status() {
-                fmt.Printf("    |- %s: '%s'\n", key, val)
-            }
-            fmt.Println()
-        } else {
-            fmt.Printf("[+] Tagging '%s'\n", name)
+            fmt.Printf("Tagging '%s'\n", name)
         }
 
         // acutally tag the file
@@ -182,7 +166,7 @@ func Tag(target, format string, verbose, dry_run bool) error {
             // open the file as an mp3 one
             id3File, err := id3.Open(file)
             if err != nil {
-                return errors.New(fmt.Sprintf("[-] Aborting ...\n[-] Failed to open '%s'", name))
+                return errors.New(fmt.Sprintf("Failed to open '%s'", name))
             }
             defer id3File.Close()
 
@@ -201,25 +185,18 @@ func Static(target string, verbose bool, fm parser.Formatter) error {
         // the actual name without the path
         name := path.Base(file)
         if !strings.Contains(name, ".mp3") {
-            fmt.Printf("[*] Skipping '%s'\n", name)
             return nil
         }
 
         if verbose {
             // print out lots of information
-            fmt.Printf("[+] Tagging '%s'\n", name)
-            for key, val := range fm.Status() {
-                fmt.Printf("    |- %s: '%s'\n", key, val)
-            }
-            fmt.Println()
-        } else {
-            fmt.Printf("[+] Tagging '%s'\n", name)
+            fmt.Printf("Tagging '%s'\n", name)
         }
 
         // open the file as an mp3 one
         id3File, err := id3.Open(file)
         if err != nil {
-            return errors.New(fmt.Sprintf("[-] Aborting ...\n[-] Failed to open '%s'", name))
+            return errors.New(fmt.Sprintf("Failed to open '%s'", name))
         }
         defer id3File.Close()
 

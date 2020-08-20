@@ -36,9 +36,22 @@ func main() {
                         Destination: &target,
                         Required: true,
                     },
+                    &cli.StringFlag {
+                        Name: "format",
+                        Aliases: []string{"f"},
+                        Usage: "Specifies `FORMAT` to output information",
+                        Destination: &format,
+                        Required: true,
+                    },
+                    &cli.BoolFlag {
+                        Name: "verbose",
+                        Aliases: []string{"v"},
+                        Usage: "Adds more output",
+                        Destination: &verbose,
+                    },
                 },
                 Action: func(c *cli.Context) error {
-                    return commands.Query(target)
+                    return commands.Query(target, format, verbose)
                 },
             },
             {
