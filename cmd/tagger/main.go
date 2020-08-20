@@ -109,23 +109,23 @@ func main() {
                     },
                     &cli.StringFlag {
                         Name: "artist",
-                        Usage: "Set artist to `ARTIST`",
+                        Usage: "Sets artist to `ARTIST`",
                     },
                     &cli.StringFlag {
                         Name: "title",
-                        Usage: "Set title to `TITLE`",
+                        Usage: "Sets title to `TITLE`",
                     },
                     &cli.StringFlag {
                         Name: "album",
-                        Usage: "Set album to `ALBUM`",
+                        Usage: "Sets album to `ALBUM`",
                     },
                     &cli.StringFlag {
                         Name: "year",
-                        Usage: "Set year to `YEAR`",
+                        Usage: "Sets year to `YEAR`",
                     },
                     &cli.StringFlag {
                         Name: "genre",
-                        Usage: "Set genre to `GENRE`",
+                        Usage: "Sets genre to `GENRE`",
                     },
                 },
                 Action: func(c *cli.Context) error {
