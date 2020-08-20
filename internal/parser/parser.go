@@ -48,18 +48,18 @@ func (f Formatter) Status() map[string]string {
 func (fm Formatter) Output(format string) (string, error) {
     output := ""
     // create a scanner to loop through each character
-    var f rune
-    var form scanner.Scanner
-    form.Init(strings.NewReader(format))
+    var format_rune rune
+    var format_scanner scanner.Scanner
+    format_scanner.Init(strings.NewReader(format))
 
     for {
-        switch f = form.Next(); f {
+        switch format_rune = format_scanner.Next(); format_rune {
         case '\\':
-            f = form.Next()
+            format_rune = format_scanner.Next()
         case '%':
             // add the specified
             // information to the output string
-            switch form.Next() {
+            switch format_scanner.Next() {
             case 'a':
                 output = output + fm.Artist
             case 't':
@@ -79,7 +79,7 @@ func (fm Formatter) Output(format string) (string, error) {
         }
         // if nothing matched, just add the char
         // to the output string
-        output = output + string(f)
+        output = output + string(format_rune)
     }
 }
 
@@ -148,86 +148,86 @@ func (fm *Formatter) Extract(content, format string) error {
     //
     // if a % is found, look for the following string
     // and put he read information into the field it belongs to
-    var c, f rune
-    var form, cont scanner.Scanner
-    cont.Init(strings.NewReader(content))
-    form.Init(strings.NewReader(format))
+    var content_rune, format_rune rune
+    var format_scanner, content_scanner scanner.Scanner
+    content_scanner.Init(strings.NewReader(content))
+    format_scanner.Init(strings.NewReader(format))
 
-    split := ""
+    var split string
     noscan, until_end := false, false
     var field, specifier string
 
     for {
-        c = cont.Next()
+        content_rune = content_scanner.Next()
         if noscan {
             noscan = false
         } else {
-            f = form.Next()
+            format_rune = format_scanner.Next()
         }
 
-        if c == scanner.EOF || f == scanner.EOF {
+        if content_rune == scanner.EOF || format_rune == scanner.EOF {
             break
         }
 
         // allows escaping characters
         // with a backslash
-        if f == '\\' {
-            f = form.Next()
-            if c == scanner.EOF || f == scanner.EOF {
+        if format_rune == '\\' {
+            format_rune = format_scanner.Next()
+            if content_rune == scanner.EOF || format_rune == scanner.EOF {
                 return errors.New("[-] Invalid format")
             }
             continue
         }
 
-        if f == '%' {
-            f = form.Next()
-            if f == scanner.EOF {
+        if format_rune == '%' {
+            format_rune = format_scanner.Next()
+            if format_rune == scanner.EOF {
                 return errors.New("[-] Invalid format")
             }
-            specifier = string(f)
+            specifier = string(format_rune)
             // flush the split and field vars
-            split = ""
-            field = ""
+            split, field = "", ""
             for {
-                f = form.Next()
-                if f == scanner.EOF {
+                format_rune = format_scanner.Next()
+                if format_rune == scanner.EOF {
                     until_end = true
                     break
                 }
 
                 // allows escaping characters
                 // with a backslash
-                if f == '\\' {
-                    f = form.Next()
-                    if c == scanner.EOF || f == scanner.EOF {
+                if format_rune == '\\' {
+                    format_rune = format_scanner.Next()
+                    if content_rune == scanner.EOF || format_rune == scanner.EOF {
                         return errors.New("[-] Invalid format")
                     }
                     continue
                 }
 
-                if f == '%' {
+                if format_rune == '%' {
                     noscan = true
                     break
                 }
-                split = split + string(f)
+                split = split + string(format_rune)
             }
 
-            field = field + string(c)
+            field = field + string(content_rune)
             for {
-                c = cont.Next()
+                content_rune = content_scanner.Next()
                 if until_end {
-                    if c == scanner.EOF {
+                    if content_rune == scanner.EOF {
                         field = strings.ReplaceAll(field, split, "")
                         break
                     }
-                    field = field + string(c)
+                    field = field + string(content_rune)
                     continue
                 }
-                // if scanner.EOF was found
-                if c == scanner.EOF {
+                // if scanner.EOF, break because
+                // the format could not be matched
+                if content_rune == scanner.EOF {
                     return errors.New("[-] Invalid format")
                 }
-                field = field + string(c)
+                field = field + string(content_rune)
                 if strings.Contains(field, split) {
                     // remove the string that was specified in the format
                     field = strings.ReplaceAll(field, split, "")
@@ -252,7 +252,7 @@ func (fm *Formatter) Extract(content, format string) error {
             continue
         }
 
-        if c != f {
+        if content_rune != format_rune {
             return errors.New("[-] Invalid format")
         }
 
