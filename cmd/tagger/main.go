@@ -31,26 +31,26 @@ func main() {
                 Flags: []cli.Flag {
                     &cli.BoolFlag {
                         Name: "dry-run",
-                        Usage: "Only show what would be done",
+                        Usage: "only show what would be done",
                         Destination: &dry_run,
                     },
                     &cli.BoolFlag {
                         Name: "verbose",
                         Aliases: []string{"v"},
-                        Usage: "Adds more output",
+                        Usage: "add more output",
                         Destination: &verbose,
                     },
                     &cli.StringFlag {
                         Name: "target",
                         Aliases: []string{"t"},
-                        Usage: "Tags `TARGET`",
+                        Usage: "tag `TARGET`",
                         Destination: &target,
                         Required: true,
                     },
                     &cli.StringFlag {
                         Name: "format",
                         Aliases: []string{"f"},
-                        Usage: "Specifies `FORMAT`; used to tag files",
+                        Usage: "specify `FORMAT` to tag files",
                         Destination: &format,
                         Required: true,
                     },
@@ -67,35 +67,35 @@ func main() {
                     &cli.BoolFlag {
                         Name: "verbose",
                         Aliases: []string{"v"},
-                        Usage: "Adds more output",
+                        Usage: "add more output",
                         Destination: &verbose,
                     },
                     &cli.StringFlag {
                         Name: "target",
                         Aliases: []string{"t"},
-                        Usage: "Tags `TARGET`",
+                        Usage: "tag `TARGET`",
                         Destination: &target,
                         Required: true,
                     },
                     &cli.StringFlag {
                         Name: "artist",
-                        Usage: "Sets artist to `ARTIST`",
+                        Usage: "set artist to `ARTIST`",
                     },
                     &cli.StringFlag {
                         Name: "title",
-                        Usage: "Sets title to `TITLE`",
+                        Usage: "set title to `TITLE`",
                     },
                     &cli.StringFlag {
                         Name: "album",
-                        Usage: "Sets album to `ALBUM`",
+                        Usage: "set album to `ALBUM`",
                     },
                     &cli.StringFlag {
                         Name: "year",
-                        Usage: "Sets year to `YEAR`",
+                        Usage: "set year to `YEAR`",
                     },
                     &cli.StringFlag {
                         Name: "genre",
-                        Usage: "Sets genre to `GENRE`",
+                        Usage: "set genre to `GENRE`",
                     },
                 },
                 Action: func(c *cli.Context) error {
@@ -118,35 +118,35 @@ func main() {
                     &cli.StringFlag {
                         Name: "target",
                         Aliases: []string{"t"},
-                        Usage: "Removes tags from `TARGET`",
+                        Usage: "remove from `TARGET`",
                         Destination: &target,
                         Required: true,
                     },
                     &cli.BoolFlag {
                         Name: "verbose",
                         Aliases: []string{"v"},
-                        Usage: "Adds more output",
+                        Usage: "add more output",
                         Destination: &verbose,
                     },
                     &cli.BoolFlag {
                         Name: "artist",
-                        Usage: "Removes the artist tag",
+                        Usage: "remove the artist tag",
                     },
                     &cli.BoolFlag {
                         Name: "title",
-                        Usage: "Removes the title tag",
+                        Usage: "remove the title tag",
                     },
                     &cli.BoolFlag {
                         Name: "album",
-                        Usage: "Removes the album tag",
+                        Usage: "remove the album tag",
                     },
                     &cli.BoolFlag {
                         Name: "year",
-                        Usage: "Removes the year tag",
+                        Usage: "remove the year tag",
                     },
                     &cli.BoolFlag {
                         Name: "genre",
-                        Usage: "Removes the genre tag",
+                        Usage: "remove the genre tag",
                     },
                 },
                 Action: func(c *cli.Context) error {
@@ -164,26 +164,26 @@ func main() {
             {
                 Name: "query",
                 Aliases: []string{"q"},
-                Usage: "Query tags",
+                Usage: "Queries tags",
                 Flags: []cli.Flag {
                     &cli.StringFlag {
                         Name: "target",
                         Aliases: []string{"t"},
-                        Usage: "Queries `TARGET`",
+                        Usage: "query `TARGET`",
                         Destination: &target,
                         Required: true,
                     },
                     &cli.StringFlag {
                         Name: "format",
                         Aliases: []string{"f"},
-                        Usage: "Specifies `FORMAT` to output information",
+                        Usage: "specifiy `FORMAT` to output information",
                         Destination: &format,
                         Required: true,
                     },
                     &cli.BoolFlag {
                         Name: "verbose",
                         Aliases: []string{"v"},
-                        Usage: "Adds more output",
+                        Usage: "add more output",
                         Destination: &verbose,
                     },
                 },
