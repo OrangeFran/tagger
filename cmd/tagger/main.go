@@ -13,47 +13,17 @@ import (
 
 var (
     dry_run bool                // only show what the code would do
-    format string = ""          // how to extract/use information in the name
     verbose bool                // specify how much the code should spit out
-    target string = ""          // use that file/directory
+    format string               // how to extract/use information in the name
+    target string               // use that file/directory
 )
 
 func main() {
-    // create the cli-flags and more
+    // create the cli app
     app := &cli.App{
         Name: "tagger",
         Usage: "tag mp3 files from the cmdline",
         Commands: []*cli.Command {
-            {
-                Name: "query",
-                Aliases: []string{"q"},
-                Usage: "Query tags",
-                Flags: []cli.Flag {
-                    &cli.StringFlag {
-                        Name: "target",
-                        Aliases: []string{"t"},
-                        Usage: "Queries `TARGET`",
-                        Destination: &target,
-                        Required: true,
-                    },
-                    &cli.StringFlag {
-                        Name: "format",
-                        Aliases: []string{"f"},
-                        Usage: "Specifies `FORMAT` to output information",
-                        Destination: &format,
-                        Required: true,
-                    },
-                    &cli.BoolFlag {
-                        Name: "verbose",
-                        Aliases: []string{"v"},
-                        Usage: "Adds more output",
-                        Destination: &verbose,
-                    },
-                },
-                Action: func(c *cli.Context) error {
-                    return commands.Query(target, format, verbose)
-                },
-            },
             {
                 Name: "tag",
                 Aliases: []string{"t"},
@@ -130,11 +100,11 @@ func main() {
                 },
                 Action: func(c *cli.Context) error {
                     fm := parser.Formatter {
-                        c.String("artist"),
-                        c.String("title"),
-                        c.String("album"),
-                        c.String("year"),
-                        c.String("genre"),
+                        Artist: c.String("artist"),
+                        Title: c.String("title"),
+                        Album: c.String("album"),
+                        Year: c.String("year"),
+                        Genre: c.String("genre"),
                     }
 
                     return commands.Static(target, verbose, fm)
@@ -189,6 +159,36 @@ func main() {
                         c.Bool("year"),
                         c.Bool("genre"),
                     )
+                },
+            },
+            {
+                Name: "query",
+                Aliases: []string{"q"},
+                Usage: "Query tags",
+                Flags: []cli.Flag {
+                    &cli.StringFlag {
+                        Name: "target",
+                        Aliases: []string{"t"},
+                        Usage: "Queries `TARGET`",
+                        Destination: &target,
+                        Required: true,
+                    },
+                    &cli.StringFlag {
+                        Name: "format",
+                        Aliases: []string{"f"},
+                        Usage: "Specifies `FORMAT` to output information",
+                        Destination: &format,
+                        Required: true,
+                    },
+                    &cli.BoolFlag {
+                        Name: "verbose",
+                        Aliases: []string{"v"},
+                        Usage: "Adds more output",
+                        Destination: &verbose,
+                    },
+                },
+                Action: func(c *cli.Context) error {
+                    return commands.Query(target, format, verbose)
                 },
             },
         },
