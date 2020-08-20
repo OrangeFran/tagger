@@ -44,7 +44,7 @@ func main() {
             {
                 Name: "tag",
                 Aliases: []string{"t"},
-                Usage: "Tags files",
+                Usage: "Tags files with dynamic values",
                 Flags: []cli.Flag {
                     &cli.BoolFlag {
                         Name: "dry-run",
@@ -79,7 +79,7 @@ func main() {
             {
                 Name: "static",
                 Aliases: []string{"s"},
-                Usage: "Tag with static values",
+                Usage: "Tags files with static values",
                 Flags: []cli.Flag {
                     &cli.BoolFlag {
                         Name: "verbose",

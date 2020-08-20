@@ -131,6 +131,16 @@ func (fm *Formatter) Extract(content, format string) error {
             break
         }
 
+        // allows escaping characters
+        // with a backslash
+        if f == '\\' {
+            f = form.Next()
+            if c == scanner.EOF || f == scanner.EOF {
+                return errors.New("[-] Invalid format")
+            }
+            continue
+        }
+
         if f == '%' {
             f = form.Next()
             if f == scanner.EOF {
@@ -145,6 +155,16 @@ func (fm *Formatter) Extract(content, format string) error {
                 if f == scanner.EOF {
                     until_end = true
                     break
+                }
+
+                // allows escaping characters
+                // with a backslash
+                if f == '\\' {
+                    f = form.Next()
+                    if c == scanner.EOF || f == scanner.EOF {
+                        return errors.New("[-] Invalid format")
+                    }
+                    continue
                 }
 
                 if f == '%' {
