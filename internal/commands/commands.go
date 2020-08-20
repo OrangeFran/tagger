@@ -22,7 +22,7 @@ import (
 //
 // the string that this function passes to the "function"
 // is always the absolute path to the file
-func Execute(target string, function func(string)error) error {
+func ExecuteFunc(target string, function func(string)error) error {
     // check if target is a file
     fi, err := os.Stat(target)
     if err != nil {
@@ -90,7 +90,7 @@ func Remove(target string, verbose, artist, title, album, year, genre bool) erro
         return nil
     }
 
-    return Execute(target, function)
+    return ExecuteFunc(target, function)
 }
 
 // used to query tags
@@ -133,7 +133,7 @@ func Query(target, format string, verbose bool) error {
         return nil
     }
 
-    return Execute(target, function)
+    return ExecuteFunc(target, function)
 }
 
 // used to tag files
@@ -176,7 +176,7 @@ func Tag(target, format string, verbose, dry_run bool) error {
         return nil
     }
 
-    return Execute(target, function)
+    return ExecuteFunc(target, function)
 }
 
 // sets values manually
@@ -205,5 +205,5 @@ func Static(target string, verbose bool, fm parser.Formatter) error {
         return nil
     }
 
-    return Execute(target, function)
+    return ExecuteFunc(target, function)
 }
