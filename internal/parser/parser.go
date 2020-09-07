@@ -2,15 +2,40 @@ package parser
 
 import (
     "errors"
-    "text/scanner"
     "strings"
 
     id3 "github.com/mikkyang/id3-go"
 )
 
-// if a value is empty, do not set it
+const (
+    EOF rune = -1
+    ERR_INVALID string = "[-] Invalid format"
+)
+
+// check if a value is empty
 func empty(a string) bool {
     if len(a) == 0 { return true } else { return false }
+}
+
+// returns one char after another
+// of a string
+type Reader struct {
+    str string
+}
+
+// removes the first char
+// of the string and returns it if possible
+func (r *Reader) Next() rune {
+    var char rune
+    if len(r.str) == 0 {
+        // -1 == EOF
+        char = -1
+    } else {
+        char = rune(r.str[0])
+        r.str = r.str[1:]
+    }
+    // remove the first element
+    return char
 }
 
 // hold data which gets added
@@ -23,6 +48,7 @@ type Formatter struct {
     Genre string
 }
 
+// returns all set values
 func (f Formatter) Status() map[string]string {
     info := make(map[string]string)
 
@@ -49,8 +75,7 @@ func (fm Formatter) Output(format string) (string, error) {
     output := ""
     // create a scanner to loop through each character
     var format_rune rune
-    var format_scanner scanner.Scanner
-    format_scanner.Init(strings.NewReader(format))
+    format_scanner := Reader { format }
 
     for {
         switch format_rune = format_scanner.Next(); format_rune {
@@ -71,15 +96,15 @@ func (fm Formatter) Output(format string) (string, error) {
             case 'g':
                 output = output + fm.Genre
             default:
-                return "", errors.New("[-] Invalid format")
+                return "", errors.New(ERR_INVALID)
             }
             continue
-        case scanner.EOF:
+        case EOF:
             return output, nil
         }
         // if nothing matched, just add the char
         // to the output string
-        output = output + string(format_rune)
+        output += string(format_rune)
     }
 }
 
@@ -141,7 +166,7 @@ func (fm *Formatter) Query(file *id3.File) error {
 // one simple format I often use is: %a - %t
 // this means I save my files like this:
 //      "Justin Bieber - Baby.mp3"
-// this is just an example, definetely not my taste
+// this is just an example btw
 func (fm *Formatter) Extract(content, format string) error {
     // loop through each char in format
     // and match it with content
@@ -149,13 +174,10 @@ func (fm *Formatter) Extract(content, format string) error {
     // if a % is found, look for the following string
     // and put he read information into the field it belongs to
     var content_rune, format_rune rune
-    var format_scanner, content_scanner scanner.Scanner
-    content_scanner.Init(strings.NewReader(content))
-    format_scanner.Init(strings.NewReader(format))
+    format_scanner, content_scanner := Reader { format }, Reader { content }
 
-    var split string
+    var split, field, specifier string
     noscan, until_end := false, false
-    var field, specifier string
 
     for {
         content_rune = content_scanner.Next()
@@ -164,8 +186,7 @@ func (fm *Formatter) Extract(content, format string) error {
         } else {
             format_rune = format_scanner.Next()
         }
-
-        if content_rune == scanner.EOF || format_rune == scanner.EOF {
+        if content_rune == EOF || format_rune == EOF {
             break
         }
 
@@ -173,23 +194,23 @@ func (fm *Formatter) Extract(content, format string) error {
         // with a backslash
         if format_rune == '\\' {
             format_rune = format_scanner.Next()
-            if content_rune == scanner.EOF || format_rune == scanner.EOF {
-                return errors.New("[-] Invalid format")
+            if content_rune == EOF || format_rune == EOF {
+                return errors.New(ERR_INVALID)
             }
             continue
         }
 
         if format_rune == '%' {
             format_rune = format_scanner.Next()
-            if format_rune == scanner.EOF {
-                return errors.New("[-] Invalid format")
+            if format_rune == EOF {
+                return errors.New(ERR_INVALID)
             }
             specifier = string(format_rune)
             // flush the split and field vars
             split, field = "", ""
             for {
                 format_rune = format_scanner.Next()
-                if format_rune == scanner.EOF {
+                if format_rune == EOF {
                     until_end = true
                     break
                 }
@@ -198,8 +219,8 @@ func (fm *Formatter) Extract(content, format string) error {
                 // with a backslash
                 if format_rune == '\\' {
                     format_rune = format_scanner.Next()
-                    if content_rune == scanner.EOF || format_rune == scanner.EOF {
-                        return errors.New("[-] Invalid format")
+                    if content_rune == EOF || format_rune == EOF {
+                        return errors.New(ERR_INVALID)
                     }
                     continue
                 }
@@ -215,17 +236,17 @@ func (fm *Formatter) Extract(content, format string) error {
             for {
                 content_rune = content_scanner.Next()
                 if until_end {
-                    if content_rune == scanner.EOF {
+                    if content_rune == EOF {
                         field = strings.ReplaceAll(field, split, "")
                         break
                     }
                     field = field + string(content_rune)
                     continue
                 }
-                // if scanner.EOF, break because
+                // if EOF, break because
                 // the format could not be matched
-                if content_rune == scanner.EOF {
-                    return errors.New("[-] Invalid format")
+                if content_rune == EOF {
+                    return errors.New(ERR_INVALID)
                 }
                 field = field + string(content_rune)
                 if strings.Contains(field, split) {
@@ -253,7 +274,7 @@ func (fm *Formatter) Extract(content, format string) error {
         }
 
         if content_rune != format_rune {
-            return errors.New("[-] Invalid format")
+            return errors.New(ERR_INVALID)
         }
 
     }
