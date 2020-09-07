@@ -14,6 +14,7 @@ import (
 var (
     dry_run bool                // only show what the code would do
     verbose bool                // specify how much the code should spit out
+    debug   bool                // specify if error should be shown if failed
     format string               // how to extract/use information in the name
     target string               // use that file/directory
 )
@@ -23,6 +24,13 @@ func main() {
     app := &cli.App{
         Name: "tagger",
         Usage: "tag mp3 files from the cmdline",
+        Flags: []cli.Flag {
+            &cli.BoolFlag {
+                Name: "debug",
+                Usage: "show debugging information if failed",
+                Destination: &debug,
+            },
+        },
         Commands: []*cli.Command {
             {
                 Name: "tag",
@@ -196,6 +204,10 @@ func main() {
 
     err := app.Run(os.Args)
     if err != nil {
-        log.Fatal(err)
+        if debug {
+            log.Fatal(err)
+        } else {
+            log.Fatal("[-] Application failed")
+        }
     }
 }
