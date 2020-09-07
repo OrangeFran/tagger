@@ -7,21 +7,21 @@ import (
 )
 
 // a helper function for evaluating test results
+// it takes a map of two strings which represent
+// the value wanted and the value the function outputted
+// if they aren't equal, it returns an error
 func EvaluateResults(results map[string]string) error {
     passed := true
     failed := ""
-
     for correct, got := range results {
         if got != correct {
             passed = false
             failed = failed + fmt.Sprintf("[-] Wanted %s, got %s\n", correct, got)
         }
     }
-
     if !passed {
         return errors.New("[-] Test failed!\n" + failed)
     }
-
     return nil
 }
 
@@ -42,9 +42,6 @@ func TestParseSimple(t *testing.T) {
     if err := EvaluateResults(results); err != nil {
         t.Errorf(err.Error())
     }
-    // if fm.Artist != "artist" || fm.Title != "title" {
-    //     t.Errorf("Simple test failed!\nWanted %s & %s, got %s & %s\n", "artist", "title", fm.Artist, fm.Title)
-    // }
 }
 
 func TestParseBeginning(t *testing.T) {
@@ -77,7 +74,7 @@ func TestParseError(t *testing.T) {
 
     // evaluate the results
     if err == nil {
-        t.Errorf("The function should have returned an error!")
+        t.Errorf("[-] The function should have returned an error!")
     }
 }
 
@@ -91,6 +88,6 @@ func TestParseErrorCutOff(t *testing.T) {
 
     // evaluate the results
     if err == nil {
-        t.Errorf("The function should have returned an error!")
+        t.Errorf("[-] The function should have returned an error!")
     }
 }
