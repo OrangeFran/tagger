@@ -35,7 +35,7 @@ func main() {
             {
                 Name: "tag",
                 Aliases: []string{"t"},
-                Usage: "tag files with dynamic values",
+                Usage: "Tags files with dynamic values",
                 Flags: []cli.Flag {
                     &cli.BoolFlag {
                         Name: "dry-run",
@@ -70,7 +70,7 @@ func main() {
             {
                 Name: "static",
                 Aliases: []string{"s"},
-                Usage: "tag files with static values",
+                Usage: "Tags files with static values",
                 Flags: []cli.Flag {
                     &cli.BoolFlag {
                         Name: "verbose",
@@ -121,7 +121,7 @@ func main() {
             {
                 Name: "remove",
                 Aliases: []string{"r"},
-                Usage: "remove tags",
+                Usage: "Removes tags",
                 Flags: []cli.Flag {
                     &cli.StringFlag {
                         Name: "target",
@@ -172,7 +172,7 @@ func main() {
             {
                 Name: "query",
                 Aliases: []string{"q"},
-                Usage: "query tags",
+                Usage: "Queries tags",
                 Flags: []cli.Flag {
                     &cli.StringFlag {
                         Name: "target",
@@ -205,9 +205,9 @@ func main() {
     err := app.Run(os.Args)
     if err != nil {
         if debug {
-            log.Fatal("[-] application failed with\n" + err)
+            log.Fatal(err)
         } else {
-            log.Fatal("[-] application failed")
+            log.Fatal("[-] Application failed")
         }
     }
 }
