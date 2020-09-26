@@ -205,9 +205,9 @@ func main() {
     err := app.Run(os.Args)
     if err != nil {
         if debug {
-            log.Fatal(err)
+            log.Fatal("[-] application failed with\n" + err.Error())
         } else {
-            log.Fatal("[-] Application failed")
+            log.Fatal("[-] application failed")
         }
     }
 }
